@@ -1,14 +1,75 @@
+# Acme Health (Coance demo): telehealth with card payments. Owners are
+# added once the org teams exist; until then anyone with write access approves.
 levels:
-  careful:
-    approvals: 1
+  payments:
+    approvals: 2
+    self_review: false
     description: |
-      Payment code. Read every changed line and check the tests cover the
-      failure cases before approving.
-  quick:
-    description: Skim the file and check the change makes sense.
+      ### 🔴 Critical risk · Payments
+      Charges cards and issues refunds. Read every changed line, run it
+      locally, and check the tests cover declined, partial and repeated payments.
+
+      **Standards:** PCI DSS v4.0.1 Req. 6.2.3 (custom code reviewed before
+      release) and 6.2.3.1 (reviewer is not the author)
+      **Docs:** [Payments review checklist](https://github.com/solid-software/coance-demo/blob/main/docs/review/payments.md) ·
+      [Card data flow](https://github.com/solid-software/coance-demo/blob/main/docs/architecture/card-data-flow.md)
+  patient-records:
+    approvals: 2
+    self_review: false
+    description: |
+      ### 🔴 Critical risk · Patient records
+      Reads or writes health records. Check every access is logged, every
+      query is scoped to the patient's care team, and nothing leaks into logs.
+
+      **Standards:** HIPAA Security Rule 45 CFR 164.312(b) audit controls,
+      164.312(c)(1) integrity
+      **Docs:** [PHI handling guide](https://github.com/solid-software/coance-demo/blob/main/docs/review/phi.md)
+  auth:
+    approvals: 1
+    self_review: false
+    description: |
+      ### 🟠 High risk · Sign-in and permissions
+      Check every new endpoint enforces authorization, and tokens and
+      sessions expire as documented.
+
+      **Standards:** OWASP ASVS 5.0 V6–V8; SOC 2 CC6.1
+      **Docs:** [Auth review checklist](https://github.com/solid-software/coance-demo/blob/main/docs/review/auth.md)
+  infrastructure:
+    approvals: 1
+    self_review: false
+    description: |
+      ### 🟠 High risk · Infrastructure and migrations
+      Runs against production. Read the plan output, check nothing new is
+      exposed, and that migrations are safe on existing rows.
+
+      **Standards:** ISO/IEC 27001:2022 A.8.9, A.8.32; SOC 2 CC8.1
+      **Docs:** [Infrastructure change runbook](https://github.com/solid-software/coance-demo/blob/main/docs/runbooks/infra-change.md)
+  app:
+    description: |
+      ### 🟡 Standard · App code
+      Read the file as a whole. Does the change make sense?
+
+template: |
+  {description}
+
+  **Approvals:** {approvals} needed · **Who can approve:** {owners}
+  Resolve this thread or reply `/approve` once you're done.
+
+  <details><summary>Why this file is governed</summary>
+
+  `{file}` matched {reason} (level `{level}`). {lines} lines changed.
+  </details>
 
 rules:
-  careful:
-    paths: ["/lib/payments/"]
-  quick:
-    paths: ["/docs/", "*.md"]
+  payments:
+    any:
+      paths: ["/lib/payments/"]
+      keywords: ["stripe"]
+  patient-records:
+    paths: ["/lib/records/"]
+  auth:
+    paths: ["/lib/auth/"]
+  infrastructure:
+    paths: ["/infra/", "/db/migrations/"]
+  app:
+    paths: ["*.dart"]

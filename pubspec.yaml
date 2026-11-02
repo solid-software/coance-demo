@@ -1,0 +1,14 @@
+name: acme_health
+description: Acme Health, a small telehealth backend (Coance demo, fictional).
+publish_to: none
+version: 0.4.0
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  http: ^1.5.0
+  postgres: ^3.5.0
+
+dev_dependencies:
+  test: ^1.26.0
