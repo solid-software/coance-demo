@@ -1,0 +1,14 @@
+levels:
+  careful:
+    approvals: 1
+    description: |
+      Payment code. Read every changed line and check the tests cover the
+      failure cases before approving.
+  quick:
+    description: Skim the file and check the change makes sense.
+
+rules:
+  careful:
+    paths: ["/lib/payments/"]
+  quick:
+    paths: ["/docs/", "*.md"]
