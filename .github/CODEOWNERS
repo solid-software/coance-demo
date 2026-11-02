@@ -1,0 +1,4 @@
+# Who owns what in the demo repository
+*                 @acme/maintainers
+/lib/payments/    @acme/payments
+/docs/            acme-docs
