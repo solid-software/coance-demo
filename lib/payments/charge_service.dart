@@ -6,7 +6,8 @@ sealed class ChargeResult {}
 
 class Charged extends ChargeResult {
   final String paymentIntentId;
-  Charged(this.paymentIntentId);
+  final Money amount;
+  Charged(this.paymentIntentId, this.amount);
 }
 
 class Declined extends ChargeResult {
@@ -42,7 +43,7 @@ class ChargeService {
         'metadata[visit_id]': visitId,
       }, idempotencyKey: 'visit-$visitId');
 
-      return Charged(intent['id']! as String);
+      return Charged(intent['id']! as String, amount);
     } on StripeError catch (error) {
       if (error.isDecline) return Declined(error.code);
       rethrow;
