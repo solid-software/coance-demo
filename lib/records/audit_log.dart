@@ -15,16 +15,19 @@ class AuditLog {
     required String clinicianId,
     required String patientId,
     required RecordAction action,
+    String? reason,
   }) async {
     await _db.execute(
       Sql.named(
-        'INSERT INTO record_access_log (clinician_id, patient_id, action) '
-        'VALUES (@clinician, @patient, @action)',
+        'INSERT INTO record_access_log '
+        '(clinician_id, patient_id, action, reason) '
+        'VALUES (@clinician, @patient, @action, @reason)',
       ),
       parameters: {
         'clinician': clinicianId,
         'patient': patientId,
         'action': action.name,
+        'reason': reason,
       },
     );
   }
