@@ -24,11 +24,10 @@ class RefundService {
         'must be positive and at most the $remaining not yet refunded',
       );
     }
-    final refund = await _stripe.post(
-      'refunds',
-      {'payment_intent': paymentIntentId, 'amount': '${amount.minorUnits}'},
-      idempotencyKey: 'refund-$requestId',
-    );
+    final refund = await _stripe.post('refunds', {
+      'payment_intent': paymentIntentId,
+      'amount': '${amount.minorUnits}',
+    }, idempotencyKey: 'refund-$requestId');
 
     return refund['id']! as String;
   }

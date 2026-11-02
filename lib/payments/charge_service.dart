@@ -32,19 +32,15 @@ class ChargeService {
       throw ArgumentError.value(amount, 'amount', 'must be positive');
     }
     try {
-      final intent = await _stripe.post(
-        'payment_intents',
-        {
-          'amount': '${amount.minorUnits}',
-          'currency': amount.currency,
-          'customer': customerId,
-          'payment_method': paymentMethodId,
-          'confirm': 'true',
-          'off_session': 'true',
-          'metadata[visit_id]': visitId,
-        },
-        idempotencyKey: 'visit-$visitId',
-      );
+      final intent = await _stripe.post('payment_intents', {
+        'amount': '${amount.minorUnits}',
+        'currency': amount.currency,
+        'customer': customerId,
+        'payment_method': paymentMethodId,
+        'confirm': 'true',
+        'off_session': 'true',
+        'metadata[visit_id]': visitId,
+      }, idempotencyKey: 'visit-$visitId');
 
       return Charged(intent['id']! as String);
     } on StripeError catch (error) {
