@@ -2,7 +2,8 @@ import '../appointments/cancellation.dart';
 import '../common/money.dart';
 import 'charge_service.dart';
 
-/// Charges the fee for a late cancellation or a no-show.
+/// Charges the fee for a late cancellation or a no-show, as listed in the
+/// patient terms.
 class CancellationFeeService {
   /// The fee for a late cancellation, in the visit's currency.
   static const lateFee = Money(1500, 'usd');
