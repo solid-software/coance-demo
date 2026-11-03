@@ -8,5 +8,5 @@ String reminderText(Appointment appointment) {
   final minute = time.minute.toString().padLeft(2, '0');
 
   return 'Acme Health: you have a video visit tomorrow at $hour:$minute. '
-      'Open the app to join.';
+      'Open the app to join, or reply C to cancel.';
 }
