@@ -1,4 +1,4 @@
 # Code owners for the Coance demo repository.
 # The last matching line wins.
-/lib/payments/    @illia-romanenko
-/.github/         @illia-romanenko
+/lib/payments/    @solid-software/payments
+/.github/         @solid-software/platform
