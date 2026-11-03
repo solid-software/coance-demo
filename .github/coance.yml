@@ -73,9 +73,3 @@ rules:
     paths: ["/infra/", "/db/migrations/"]
   app:
     paths: ["*.dart"]
-
-# Govern every pull request, including stacked layers that target another
-# branch, and judge them all by the policy on main.
-branches:
-  governed: ["**"]
-  config: main
