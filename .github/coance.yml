@@ -1,5 +1,4 @@
-# Acme Health (Coance demo): telehealth with card payments. Owners are
-# added once the org teams exist; until then anyone with write access approves.
+# .github/coance.yml (coance-demo: "Acme Health", telehealth with card payments)
 levels:
   payments:
     approvals: 2
@@ -63,13 +62,19 @@ template: |
 rules:
   payments:
     any:
-      paths: ["/lib/payments/"]
-      keywords: ["stripe"]
+      paths:
+        /lib/payments/: "@solid-software/payments"
+      keywords:
+        stripe: "@solid-software/payments"
   patient-records:
-    paths: ["/lib/records/"]
+    paths:
+      /lib/records/: "@solid-software/clinical @solid-software/security"
   auth:
-    paths: ["/lib/auth/"]
+    paths:
+      /lib/auth/: "@solid-software/security"
   infrastructure:
-    paths: ["/infra/", "/db/migrations/"]
+    paths:
+      /infra/: "@solid-software/platform"
+      /db/migrations/: "@solid-software/platform"
   app:
     paths: ["*.dart"]
