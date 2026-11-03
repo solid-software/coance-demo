@@ -12,6 +12,11 @@ resource "google_cloud_run_v2_service" "api" {
       image = var.api_image
 
       env {
+        name  = "SESSION_IDLE_MINUTES"
+        value = "10"
+      }
+
+      env {
         name = "DATABASE_URL"
         value_source {
           secret_key_ref {
