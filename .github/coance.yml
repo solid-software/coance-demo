@@ -1,52 +1,64 @@
 # .github/coance.yml (coance-demo: "Acme Health", telehealth with card payments)
+# Levels are named by what the code is, strictest first. Related standards
+# are context in each description, not a claim about the code.
 levels:
   payments:
     approvals: 2
     self_review: false
     description: |
-      ### 🔴 Critical risk · Payments
-      Charges cards and issues refunds. Read every changed line, run it
-      locally, and check the tests cover declined, partial and repeated payments.
+      ### 💳 Payments
+      Money moves here. Read every changed line; two reviewers, neither the
+      author. Check the tests cover declined, partial and repeated payments.
 
-      **Standards:** PCI DSS v4.0.1 Req. 6.2.3 (custom code reviewed before
-      release) and 6.2.3.1 (reviewer is not the author)
+      **Related:** PCI DSS v4.0.1 requirement 6.2.3.1 (custom code reviewed
+      by someone other than its author before release)
       **Docs:** [Payments review checklist](https://github.com/solid-software/coance-demo/blob/main/docs/review/payments.md) ·
       [Card data flow](https://github.com/solid-software/coance-demo/blob/main/docs/architecture/card-data-flow.md)
-  patient-records:
+  auth:
     approvals: 2
     self_review: false
     description: |
-      ### 🔴 Critical risk · Patient records
-      Reads or writes health records. Check every access is logged, every
-      query is scoped to the patient's care team, and nothing leaks into logs.
+      ### 🔐 Auth
+      Login, sessions, permissions and tokens. Read every changed line; one
+      reviewer from security.
 
-      **Standards:** HIPAA Security Rule 45 CFR 164.312(b) audit controls,
-      164.312(c)(1) integrity
-      **Docs:** [PHI handling guide](https://github.com/solid-software/coance-demo/blob/main/docs/review/phi.md)
-  auth:
+      **Related:** OWASP ASVS 5.0 (authentication, session management,
+      authorization)
+      **Docs:** [Auth review checklist](https://github.com/solid-software/coance-demo/blob/main/docs/review/auth.md)
+  personal-data:
     approvals: 1
     self_review: false
     description: |
-      ### 🟠 High risk · Sign-in and permissions
-      Check every new endpoint enforces authorization, and tokens and
-      sessions expire as documented.
+      ### 🩺 Personal data
+      Reads, stores or exports patient data. The owner reads every changed
+      line: every access is logged, scoped to the patient's care team, and
+      nothing leaks into logs.
 
-      **Standards:** OWASP ASVS 5.0 V6–V8; SOC 2 CC6.1
-      **Docs:** [Auth review checklist](https://github.com/solid-software/coance-demo/blob/main/docs/review/auth.md)
+      **Related:** GDPR Articles 25 and 32; HIPAA 45 CFR 164.312 for health data
+      **Docs:** [PHI handling guide](https://github.com/solid-software/coance-demo/blob/main/docs/review/phi.md)
   infrastructure:
     approvals: 1
     self_review: false
     description: |
-      ### 🟠 High risk · Infrastructure and migrations
-      Runs against production. Read the plan output, check nothing new is
-      exposed, and that migrations are safe on existing rows.
+      ### 🏗️ Infrastructure
+      CI, deploy and infrastructure as code. The owner reads every changed
+      line and the plan output.
 
-      **Standards:** ISO/IEC 27001:2022 A.8.9, A.8.32; SOC 2 CC8.1
+      **Related:** NIST SSDF PW.7 (review code); SOC 2 CC8.1 (change management)
       **Docs:** [Infrastructure change runbook](https://github.com/solid-software/coance-demo/blob/main/docs/runbooks/infra-change.md)
-  app:
+  migrations:
+    approvals: 1
+    self_review: false
     description: |
-      ### 🟡 Standard · App code
-      Read the file as a whole. Does the change make sense?
+      ### 🗄️ Migrations
+      Database schema and data changes, hard to undo. The owner reads every
+      changed line, including the rollback.
+
+      **Related:** SOC 2 CC8.1 (change management)
+  standard:
+    description: |
+      ### Standard
+      Read the file. Does the change make sense?
 
 template: |
   {description}
@@ -66,15 +78,18 @@ rules:
         /lib/payments/: "@solid-software/payments"
       keywords:
         stripe: "@solid-software/payments"
-  patient-records:
-    paths:
-      /lib/records/: "@solid-software/clinical @solid-software/security"
   auth:
     paths:
       /lib/auth/: "@solid-software/security"
+  personal-data:
+    paths:
+      /lib/records/: "@solid-software/clinical"
   infrastructure:
     paths:
       /infra/: "@solid-software/platform"
+      /.github/: "@solid-software/platform"
+  migrations:
+    paths:
       /db/migrations/: "@solid-software/platform"
-  app:
+  standard:
     paths: ["*.dart"]
