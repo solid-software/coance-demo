@@ -2,7 +2,7 @@
 /// together.
 class SessionPolicy {
   /// A session ends after this long without a request.
-  static const idleTimeout = Duration(minutes: 15);
+  static const idleTimeout = Duration(minutes: 10);
 
   /// A session ends this long after sign-in, active or not.
   static const absoluteTimeout = Duration(hours: 8);

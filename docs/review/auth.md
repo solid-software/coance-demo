@@ -9,7 +9,7 @@ For changes under `lib/auth/` and any new endpoint.
       data. Signed in is not the same as allowed.
 - [ ] **Deny by default.** A new `Permission` is granted to no role until a
       role change says so.
-- [ ] **Sessions expire as documented.** 15 minutes idle, 8 hours absolute
+- [ ] **Sessions expire as documented.** 10 minutes idle, 8 hours absolute
       (`SessionPolicy`). If you change one, change this line too.
 - [ ] **Tokens.** Tokens are checked for signature, issuer, audience and
       expiry. No token or session id in logs or URLs.
