@@ -1,4 +1,15 @@
 # Code owners for the Coance demo repository.
-# The last matching line wins.
+# The last matching line wins. A `# coance:` comment sets the review level
+# of the lines below it; GitHub ignores comments.
+
+# coance: payments
 /lib/payments/    @solid-software/payments
-/.github/         @solid-software/platform
+
+# coance: auth
+/lib/auth/        @solid-software/security
+
+# coance: personal-data
+/lib/records/     @solid-software/clinical
+
+# coance: migrations
+/db/migrations/   @solid-software/platform
