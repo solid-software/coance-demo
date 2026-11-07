@@ -16,7 +16,10 @@ class RefundService {
     required Money amount,
     required String requestId,
   }) async {
-    final remaining = charged - alreadyRefunded;
+    final remaining = refundable(
+      charged: charged,
+      alreadyRefunded: alreadyRefunded,
+    );
     if (!amount.isPositive || amount > remaining) {
       throw ArgumentError.value(
         amount,
@@ -31,4 +34,11 @@ class RefundService {
 
     return refund['id']! as String;
   }
+
+  /// What is left to refund of [charged] after [alreadyRefunded]; never
+  /// negative, since refunds are capped at the charge.
+  static Money refundable({
+    required Money charged,
+    required Money alreadyRefunded,
+  }) => charged - alreadyRefunded;
 }
