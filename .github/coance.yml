@@ -55,10 +55,6 @@ levels:
       changed line, including the rollback.
 
       **Related:** SOC 2 CC8.1 (change management)
-  standard:
-    description: |
-      ### Standard
-      Read the file. Does the change make sense?
 
 template: |
   {description}
@@ -91,5 +87,3 @@ rules:
   migrations:
     paths:
       /db/migrations/: "@solid-software/platform"
-  standard:
-    paths: ["*.dart"]
