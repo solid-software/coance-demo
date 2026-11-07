@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
 import '../auth/clinician.dart';
@@ -39,5 +41,33 @@ class PatientRecordRepository {
       allergies: (row['allergies'] as List).cast<String>(),
       activeMedications: (row['active_medications'] as List).cast<String>(),
     );
+  }
+
+  /// The record of [patientId] as JSON, for a referral to another provider.
+  /// Needs [Permission.exportRecords] and a [reason], which the audit log
+  /// keeps.
+  Future<String?> export(
+    Clinician clinician,
+    String patientId, {
+    required String reason,
+  }) async {
+    if (!clinician.can(Permission.exportRecords)) {
+      throw StateError('Clinician ${clinician.id} may not export records');
+    }
+    final record = await find(clinician, patientId);
+    if (record == null) return null;
+    await _audit.record(
+      clinicianId: clinician.id,
+      patientId: patientId,
+      action: RecordAction.export,
+      reason: reason,
+    );
+
+    return jsonEncode({
+      'patient_id': record.patientId,
+      'date_of_birth': record.dateOfBirth.toIso8601String(),
+      'allergies': record.allergies,
+      'active_medications': record.activeMedications,
+    });
   }
 }
