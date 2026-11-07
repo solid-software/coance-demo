@@ -15,6 +15,7 @@ class RefundService {
     required Money alreadyRefunded,
     required Money amount,
     required String requestId,
+    String reason = 'requested_by_customer',
   }) async {
     final remaining = charged - alreadyRefunded;
     if (!amount.isPositive || amount > remaining) {
@@ -27,6 +28,7 @@ class RefundService {
     final refund = await _stripe.post('refunds', {
       'payment_intent': paymentIntentId,
       'amount': '${amount.minorUnits}',
+      'reason': reason,
     }, idempotencyKey: 'refund-$requestId');
 
     return refund['id']! as String;
